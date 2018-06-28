@@ -10,11 +10,11 @@ class Message
       splitted_message = message.split(',')
 
       worker_id = splitted_message.first.delete('worker_id: ')
-      x = splitted_message.last.delete('array: ')
+      array = splitted_message.last.delete('array: ')
 
       {
         worker_id: worker_id,
-        array: x.split('|').map(&:to_i).sort,
+        array: array.split('|').map(&:to_i)
       }
     end
   end

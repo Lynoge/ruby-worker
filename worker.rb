@@ -1,39 +1,36 @@
 require 'socket'
 require './message'
+require './sort'
 
 class Worker
   def initialize(server)
     @server = server
-    @request = nil
     @response = nil
     listen
-    send
-    @request.join
+    join
     @response.join
   end
+
+  private
 
   def listen
     @response = Thread.new do
       loop {
         string_message = @server.gets.chomp
-        puts Message.read(string_message)
+        message = Message.read(string_message)
+
+        array_sorted = Sort.bubble_sort(message[:array])
+        worker_id = message[:worker_id]
+
+        @server.puts Message.send(worker_id, array_sorted)
       }
     end
   end
 
-  def send
+  def join
     puts "Enter your worker ID:"
     id = $stdin.gets.chomp
 
-    join(id)
-
-    @request = Thread.new do
-    end
-  end
-
-  private
-
-  def join(id)
     @server.puts(id)
   end
 end
