@@ -7,7 +7,16 @@ class Server
     @shuffle_matrix = (0..9).map { (1..10000).to_a.shuffle }
     @sorted_matrix = []
     @workers = []
+    show
     run
+  end
+
+  def show
+    Thread.new {
+      loop do
+        show_lists
+      end
+    }
   end
 
   def run
@@ -23,13 +32,6 @@ class Server
           send_unsorted_list
         end
       }
-
-      Thread.start {
-        loop do
-          show_lists
-        end
-      }
-
     }.join
   end
 
@@ -83,6 +85,7 @@ class Server
 
     puts "--- Workers ---"
     puts @workers
+    sleep(3)
   end
 end
 
